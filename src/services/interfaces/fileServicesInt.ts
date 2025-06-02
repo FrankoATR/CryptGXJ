@@ -1,13 +1,16 @@
-import { FileCreateByFileRequestDTO } from "@/dtos/file/file-create-by-file-request";
+import { FileEncryptDTO } from "@/dtos/file/file-encrypt-request";
 import { FileJSONResponseDTO } from "@/dtos/file/file-json-response";
-import { FileXMLToJSONRequestDTO } from "@/dtos/file/file-xml-to-json-request";
-import { FileXMLResponseDTO } from "@/dtos/file/file-xml-response copy";
-import { FileJSONToXMLRequestDTO } from "@/dtos/file/file-json-to-xml-request copy";
+import { FileXMLRequestDTO } from "@/dtos/file/file-xml-request";
+import { FileXMLResponseDTO } from "@/dtos/file/file-xml-response";
+import { FileJSONRequestDTO } from "@/dtos/file/file-json-request";
+import { FileDecryptResponseDTO } from "@/dtos/file/file-decrypt-response";
 
 export interface fileServiceInt
 {
-    convertDelimitedTextToJSON(dto: FileCreateByFileRequestDTO): FileJSONResponseDTO
-    convertDelimitedTextToXML(dto: FileCreateByFileRequestDTO): FileXMLResponseDTO
-    convertXMLToJSON(dto: FileXMLToJSONRequestDTO): FileJSONResponseDTO
-    convertJSONToXML(dto: FileJSONToXMLRequestDTO): FileXMLResponseDTO
+    convertDelimitedTextToJSON(dto: FileEncryptDTO): FileJSONResponseDTO
+    convertDelimitedTextToXML(dto: FileEncryptDTO): FileXMLResponseDTO
+    convertJSONToDelimitedText(dto: FileJSONRequestDTO): FileDecryptResponseDTO
+    convertXMLToDelimitedText(dto: FileXMLRequestDTO): FileDecryptResponseDTO
+    convertXMLToJSON(dto: FileXMLRequestDTO): FileJSONResponseDTO
+    convertJSONToXML(dto: FileJSONRequestDTO): FileXMLResponseDTO
 }

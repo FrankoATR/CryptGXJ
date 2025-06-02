@@ -1,4 +1,4 @@
-export interface FileCreateByFileRequestDTO 
+export interface FileEncryptDTO 
 {
   fileContent: string
   delimiter: string

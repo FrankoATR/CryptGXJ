@@ -1,7 +1,6 @@
 import { FileClientStruct } from "./file-client-struct"
 
-export interface FileJSONToXMLRequestDTO
+export interface FileJSONRequestDTO
 {
   data: FileClientStruct[]
-  key: string
 }

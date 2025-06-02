@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-export default function HomePage() {
+export default function DecryptPage() {
   const [file, setFile] = useState<File | null>(null)
   const [delimiter, setDelimiter] = useState(';')
   const [key, setKey] = useState('')
@@ -21,7 +21,7 @@ export default function HomePage() {
     formData.append('key', key)
     formData.append('format', format)
 
-    const res = await fetch('/api/file/encrypt', {
+    const res = await fetch('/api/file/decrypt', {
       method: 'POST',
       body: formData,
     })
@@ -29,41 +29,33 @@ export default function HomePage() {
     const data = await res.json()
 
     if (res.ok) {
-      // Si es JSON, lo formateamos; si es XML, lo mostramos directamente
-      const formatted = format === 'json'
-        ? JSON.stringify(data.data, null, 2)
-        : data.data
-      setResult(formatted)
+      setResult(data.data) // texto plano
     } else {
       setResult(`Error: ${data.error}`)
     }
   }
 
   const handleDownload = () => {
-    const blob = new Blob([result], {
-      type: format === 'json' ? 'application/json' : 'application/xml'
-    })
-
+    const blob = new Blob([result], { type: 'text/plain' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = format === 'json' ? 'archivo.json' : 'archivo.xml'
+    a.download = 'archivo-desencriptado.txt'
     a.click()
     URL.revokeObjectURL(url)
   }
 
-
   return (
     <div className="p-6 max-w-xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Convertir Archivo a JSON o XML Cifrado</h1>
+      <h1 className="text-2xl font-bold mb-4">Desencriptar JSON o XML a archivo .txt</h1>
 
       <div className="mb-4">
-        <label className="block mb-1 font-medium">Seleccionar archivo:</label>
-        <input type="file" accept=".txt" onChange={(e) => setFile(e.target.files?.[0] || null)} />
+        <label className="block mb-1 font-medium">Seleccionar archivo (.json o .xml):</label>
+        <input type="file" accept=".json,.xml" onChange={(e) => setFile(e.target.files?.[0] || null)} />
       </div>
 
       <div className="mb-4">
-        <label className="block mb-1 font-medium">Delimitador:</label>
+        <label className="block mb-1 font-medium">Delimitador de salida:</label>
         <input
           className="border rounded p-1 w-full"
           value={delimiter}
@@ -72,7 +64,7 @@ export default function HomePage() {
       </div>
 
       <div className="mb-4">
-        <label className="block mb-1 font-medium">Clave de cifrado:</label>
+        <label className="block mb-1 font-medium">Clave de desencriptado:</label>
         <input
           className="border rounded p-1 w-full"
           type="password"
@@ -82,12 +74,11 @@ export default function HomePage() {
       </div>
 
       <div className="mb-4">
-        <label className="block mb-1 font-medium">Formato de salida:</label>
+        <label className="block mb-1 font-medium">Formato de entrada:</label>
         <select
           className="border rounded p-1 w-full"
           value={format}
-          onChange={(e) => {setFormat(e.target.value as 'json' | 'xml'); setResult("");}}
-          
+          onChange={(e) => { setFormat(e.target.value as 'json' | 'xml'); setResult("") }}
         >
           <option value="json">JSON</option>
           <option value="xml">XML</option>
@@ -98,11 +89,11 @@ export default function HomePage() {
         className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
         onClick={handleSubmit}
       >
-        Convertir
+        Desencriptar
       </button>
 
       <div className="mt-6">
-        <label className="block mb-1 font-medium">Resultado:</label>
+        <label className="block mb-1 font-medium">Resultado (.txt):</label>
         <textarea
           className="border rounded w-full h-60 p-2 font-mono"
           readOnly
@@ -111,12 +102,11 @@ export default function HomePage() {
         {result && (
           <button
             className="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-            onClick={() => handleDownload()}
+            onClick={handleDownload}
           >
             Descargar archivo
           </button>
         )}
-
       </div>
     </div>
   )

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { fileServiceImp } from '@/services/implementations/fileServiceImp'
-import { FileCreateByFileRequestDTO } from '@/dtos/file/file-create-by-file-request'
+import { FileEncryptDTO } from '@/dtos/file/file-encrypt-request'
 import { GeneralResponse } from '@/lib/generalResponse'
 
 export async function POST(req: NextRequest) {
@@ -14,13 +14,13 @@ export async function POST(req: NextRequest) {
         if (!file || !key || !format || !['json', 'xml'].includes(format)) {
             return GeneralResponse({
                 success: false,
-                message: "Archivo, clave y formato (json o xml) son requeridos",
+                message: "File, key and format (json or xml) are required.",
             }, 400, { logError: true })
         }
 
         const fileContent = await file.text()
 
-        const dto: FileCreateByFileRequestDTO = {
+        const dto: FileEncryptDTO = {
             fileContent,
             delimiter,
             key

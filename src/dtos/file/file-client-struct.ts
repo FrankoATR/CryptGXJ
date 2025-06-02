@@ -1,5 +1,9 @@
 export interface FileClientStruct {
+  document: string
   name: string
-  email: string
-  creditCard: string
+  lastname: string
+  creditCardNumber: string
+  creditCardType: string
+  phone: string
+  polygon: string | any
 }

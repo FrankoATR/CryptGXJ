@@ -111,6 +111,7 @@ export class fileServiceImp implements fileServiceInt {
       ? parsed.clients.client
       : [parsed.clients.client]
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const lines = clients.map((client: any) => {
       const decryptedCard = CryptoJS.AES.decrypt(
         client.creditCardNumber,
@@ -172,6 +173,7 @@ export class fileServiceImp implements fileServiceInt {
       : [parsed.clients.client]
 
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const result = clients.map((client: any) => {
       const polygon = client.polygon
       return {

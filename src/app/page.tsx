@@ -1,123 +1,64 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+
+const BUTTONS = [
+  {
+    label: "ENCRIPTAR",
+    href: "/encrypt",
+    key: "convertidor",
+  },
+  {
+    label: "DESENCRIPTAR",
+    href: "/decrypt",
+    key: "desencriptar",
+  },
+  {
+    label: (
+      <>
+        CONVERTIR <br /> JSON ↔ XML
+      </>
+    ),
+    href: "/switch",
+    key: "switch",
+  },
+];
 
 export default function HomePage() {
-  const [file, setFile] = useState<File | null>(null)
-  const [delimiter, setDelimiter] = useState(';')
-  const [key, setKey] = useState('')
-  const [format, setFormat] = useState<'json' | 'xml'>('json')
-  const [result, setResult] = useState<string>('')
-
-  const handleSubmit = async () => {
-    if (!file || !key) {
-      alert('Por favor selecciona un archivo, un delimitador y una clave.')
-      return
-    }
-
-    const formData = new FormData()
-    formData.append('file', file)
-    formData.append('delimiter', delimiter)
-    formData.append('key', key)
-    formData.append('format', format)
-
-    const res = await fetch('/api/file/encrypt', {
-      method: 'POST',
-      body: formData,
-    })
-
-    const data = await res.json()
-
-    if (res.ok) {
-      // Si es JSON, lo formateamos; si es XML, lo mostramos directamente
-      const formatted = format === 'json'
-        ? JSON.stringify(data.data, null, 2)
-        : data.data
-      setResult(formatted)
-    } else {
-      setResult(`Error: ${data.error}`)
-    }
-  }
-
-  const handleDownload = () => {
-    const blob = new Blob([result], {
-      type: format === 'json' ? 'application/json' : 'application/xml'
-    })
-
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = format === 'json' ? 'archivo.json' : 'archivo.xml'
-    a.click()
-    URL.revokeObjectURL(url)
-  }
-
+  // Por defecto, el primer botón tiene el w-lg
+  const [active, setActive] = useState<string>(BUTTONS[1].key);
 
   return (
-    <div className="p-6 max-w-xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Convertir Archivo a JSON o XML Cifrado</h1>
-
-      <div className="mb-4">
-        <label className="block mb-1 font-medium">Seleccionar archivo:</label>
-        <input type="file" accept=".txt" onChange={(e) => setFile(e.target.files?.[0] || null)} />
-      </div>
-
-      <div className="mb-4">
-        <label className="block mb-1 font-medium">Delimitador:</label>
-        <input
-          className="border rounded p-1 w-full"
-          value={delimiter}
-          onChange={(e) => setDelimiter(e.target.value)}
-        />
-      </div>
-
-      <div className="mb-4">
-        <label className="block mb-1 font-medium">Clave de cifrado:</label>
-        <input
-          className="border rounded p-1 w-full"
-          type="password"
-          value={key}
-          onChange={(e) => setKey(e.target.value)}
-        />
-      </div>
-
-      <div className="mb-4">
-        <label className="block mb-1 font-medium">Formato de salida:</label>
-        <select
-          className="border rounded p-1 w-full"
-          value={format}
-          onChange={(e) => {setFormat(e.target.value as 'json' | 'xml'); setResult("");}}
-          
-        >
-          <option value="json">JSON</option>
-          <option value="xml">XML</option>
-        </select>
-      </div>
-
-      <button
-        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-        onClick={handleSubmit}
-      >
-        Convertir
-      </button>
-
-      <div className="mt-6">
-        <label className="block mb-1 font-medium">Resultado:</label>
-        <textarea
-          className="border rounded w-full h-60 p-2 font-mono"
-          readOnly
-          value={result}
-        ></textarea>
-        {result && (
-          <button
-            className="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-            onClick={() => handleDownload()}
+    <div className="bg-[#8AD1BF] flex flex-col items-center justify-center min-h-screen w-full">
+      <h1 className="font-bold text-6xl text-[#38544D]">CryptGXJ</h1>
+      <div className="flex flex-row justify-between mt-10 gap-4 w-full max-w-3xl">
+        {BUTTONS.map((btn, idx) => (
+          <div
+            key={btn.key}
+            className={`flex-1 flex ${
+              idx === 0
+                ? "justify-start"
+                : idx === 1
+                ? "justify-center"
+                : "justify-end"
+            }`}
+            onMouseEnter={() => setActive(btn.key)}
           >
-            Descargar archivo
-          </button>
-        )}
-
+            <Button asChild className="h-30 w-30 bg-[#548075] text-center shadow-2xl">
+              <Link
+                href={btn.href}
+                className={`text-[#A1F4DF] font-mono ${
+                  active === btn.key ? "w-lg" : ""
+                } font-extralight`}
+              >
+                {btn.label}
+              </Link>
+            </Button>
+          </div>
+        ))}
       </div>
     </div>
-  )
+  );
 }

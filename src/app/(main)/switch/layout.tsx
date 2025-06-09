@@ -1,7 +1,8 @@
 import { Inter } from "next/font/google";
 import type { Metadata } from "next";
-import "../../styles/globals.css";
+import "../../../styles/globals.css";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",

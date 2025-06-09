@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { fileServiceImp } from '@/services/implementations/fileServiceImp'
-import { FileXMLRequestDTO } from '@/dtos/file/file-xml-request'
 import { FileJSONRequestDTO } from '@/dtos/file/file-json-request'
+import { FileXMLRequestDTO } from '@/dtos/file/file-xml-request'
 import { GeneralResponse } from '@/lib/generalResponse'
+import { fileServiceImp } from '@/services/implementations/fileServiceImp'
+import { NextRequest } from 'next/server'
 
 export async function POST(req: NextRequest) {
     try {
@@ -42,6 +42,7 @@ export async function POST(req: NextRequest) {
                 data: result.result
             })
         }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
         return GeneralResponse({
             success: false,

@@ -5,5 +5,6 @@ export interface FileClientStruct {
   creditCardNumber: string
   creditCardType: string
   phone: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   polygon: string | any
 }

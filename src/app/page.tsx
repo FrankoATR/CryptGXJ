@@ -28,7 +28,7 @@ const BUTTONS = [
 
 export default function HomePage() {
   // Por defecto, el primer botón tiene el w-lg
-  const [active, setActive] = useState<string>(BUTTONS[1].key);
+  const [active, setActive] = useState<string>(BUTTONS[0].key);
 
   return (
     <div className="bg-[#8AD1BF] flex flex-col items-center justify-center min-h-screen w-full">

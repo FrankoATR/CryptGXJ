@@ -1,40 +1,40 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-} from '@/components/ui/select';
-import { ArrowLeft } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+} from "@/components/ui/select";
+import { ArrowLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function DecryptPage() {
   const [file, setFile] = useState<File | null>(null);
-  const [delimiter, setDelimiter] = useState(';');
-  const [key, setKey] = useState('');
-  const [format, setFormat] = useState<'json' | 'xml'>('json');
-  const [result, setResult] = useState<string>('');
+  const [delimiter, setDelimiter] = useState(";");
+  const [key, setKey] = useState("");
+  const [format, setFormat] = useState<"json" | "xml">("json");
+  const [result, setResult] = useState<string>("");
   const router = useRouter();
 
   const handleSubmit = async () => {
     if (!file || !key) {
-      alert('Por favor selecciona un archivo, un delimitador y una clave.');
+      alert("Por favor selecciona un archivo, un delimitador y una clave.");
       return;
     }
 
     const formData = new FormData();
-    formData.append('file', file);
-    formData.append('delimiter', delimiter);
-    formData.append('key', key);
-    formData.append('format', format);
+    formData.append("file", file);
+    formData.append("delimiter", delimiter);
+    formData.append("key", key);
+    formData.append("format", format);
 
-    const res = await fetch('/api/file/decrypt', {
-      method: 'POST',
+    const res = await fetch("/api/file/decrypt", {
+      method: "POST",
       body: formData,
     });
 
@@ -48,13 +48,19 @@ export default function DecryptPage() {
   };
 
   const handleDownload = () => {
-    const blob = new Blob([result], { type: 'text/plain' });
+    const blob = new Blob([result], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = 'archivo-desencriptado.txt';
+    a.download = "archivo-desencriptado.txt";
     a.click();
     URL.revokeObjectURL(url);
+  };
+
+  const detectFormatFromFile = (filename: string): "json" | "xml" | null => {
+    if (filename.endsWith(".json")) return "json";
+    if (filename.endsWith(".xml")) return "xml";
+    return null;
   };
 
   return (
@@ -64,8 +70,9 @@ export default function DecryptPage() {
           className="text-2xl font-bold mb-4 text-center text-[#548075]"
           onClick={() => window.history.back()}
         >
-          <ArrowLeft className="inline mr-2 cursor-pointer" 
-          onClick={() => router.back()}
+          <ArrowLeft
+            className="inline mr-2 cursor-pointer"
+            onClick={() => router.back()}
           />
           Desencriptar JSON o XML a archivo .txt
         </h1>
@@ -78,7 +85,22 @@ export default function DecryptPage() {
             id="file"
             type="file"
             accept=".json,.xml"
-            onChange={(e) => setFile(e.target.files?.[0] || null)}
+            onChange={(e) => {
+              const selectedFile = e.target.files?.[0] || null;
+              setFile(selectedFile);
+
+              if (selectedFile) {
+                const detected = detectFormatFromFile(selectedFile.name);
+                if (detected) {
+                  setFormat(detected);
+                  setResult("");
+                } else {
+                  alert("Solo se permiten archivos .json o .xml");
+                  setFile(null);
+                  setFormat("json");
+                }
+              }
+            }}
             className="cursor-pointer file:bg-[#548075] file:text-white file:border-0 file:rounded file:px-4 file:py-2"
           />
         </div>
@@ -114,9 +136,11 @@ export default function DecryptPage() {
           <Select
             value={format}
             onValueChange={(value) => {
-              setFormat(value as 'json' | 'xml');
-              setResult('');
+              setFormat(value as "json" | "xml");
+              setResult("");
             }}
+
+            disabled
           >
             <SelectTrigger id="format" className="w-full">
               {format.toUpperCase()}

@@ -41,7 +41,14 @@ export default function DecryptPage() {
     const data = await res.json();
 
     if (res.ok) {
-      setResult(data.data); // texto plano
+      if(!data.data)
+      {
+        setResult("Clave incorrecta.")
+      }
+      else
+      {
+        setResult(data.data); // texto plano
+      }
     } else {
       setResult(`Error: ${data.error}`);
     }

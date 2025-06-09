@@ -117,8 +117,7 @@ export default function SwitchConvertPage() {
           </Label>
           <Select
             value={toFormat}
-            onValueChange={(value) => setToFormat(value as "json" | "xml")}
-            disabled={!fromFormat}
+            disabled
           >
             <SelectTrigger id="format" className="w-full">
               {toFormat.toUpperCase()}

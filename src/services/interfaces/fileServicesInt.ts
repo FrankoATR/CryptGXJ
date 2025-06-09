@@ -9,8 +9,8 @@ export interface fileServiceInt
 {
     convertDelimitedTextToJSON(dto: FileEncryptDTO): FileJSONResponseDTO
     convertDelimitedTextToXML(dto: FileEncryptDTO): FileXMLResponseDTO
-    convertJSONToDelimitedText(dto: FileJSONRequestDTO): FileDecryptResponseDTO
-    convertXMLToDelimitedText(dto: FileXMLRequestDTO): FileDecryptResponseDTO
+    convertJSONToDelimitedText(dto: FileJSONRequestDTO): FileDecryptResponseDTO | null
+    convertXMLToDelimitedText(dto: FileXMLRequestDTO): FileDecryptResponseDTO | null
     convertXMLToJSON(dto: FileXMLRequestDTO): FileJSONResponseDTO
     convertJSONToXML(dto: FileJSONRequestDTO): FileXMLResponseDTO
 }

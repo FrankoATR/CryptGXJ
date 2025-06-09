@@ -32,6 +32,15 @@ export async function POST(req: NextRequest) {
       }
 
       const result = service.convertJSONToDelimitedText(dto)
+
+      if (!result) {
+        return GeneralResponse({
+          success: false,
+          message: "Wrong key.",
+          data: null
+        })
+      }
+
       return GeneralResponse({
         success: true,
         message: "JSON file decrypted successfully.",
@@ -45,13 +54,22 @@ export async function POST(req: NextRequest) {
       }
 
       const result = service.convertXMLToDelimitedText(dto)
+
+      if (!result) {
+        return GeneralResponse({
+          success: false,
+          message: "Wrong key.",
+          data: null
+        })
+      }
+
       return GeneralResponse({
         success: true,
         message: "XML file decrypted successfully.",
         data: result.result
       })
     }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     return GeneralResponse({
       success: false,

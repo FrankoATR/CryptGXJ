@@ -74,12 +74,22 @@ export class fileServiceImp implements fileServiceInt {
   }
 
 
-  convertJSONToDelimitedText(dto: FileInputJSONDecryptRequestDTO): FileDecryptResponseDTO {
+  convertJSONToDelimitedText(dto: FileInputJSONDecryptRequestDTO): FileDecryptResponseDTO | null {
+
+    let validDecryptionFound = false
+
     const lines = dto.data.map(client => {
-      const decryptedCard = CryptoJS.AES.decrypt(
-        client.creditCardNumber,
-        dto.key
-      ).toString(CryptoJS.enc.Utf8)
+
+      let finalCard: string | null = null
+
+      try {
+        const decryptedBytes = CryptoJS.AES.decrypt(client.creditCardNumber, dto.key)
+        const decryptedCard = decryptedBytes.toString(CryptoJS.enc.Utf8)
+        finalCard = decryptedCard === '' ? null : decryptedCard
+        if (finalCard) validDecryptionFound = true
+      } catch {
+        finalCard = null
+      }
 
       const polygon = typeof client.polygon === 'string'
         ? client.polygon
@@ -89,18 +99,20 @@ export class fileServiceImp implements fileServiceInt {
         client.document,
         client.name,
         client.lastname,
-        decryptedCard,
+        finalCard,
         client.creditCardType,
         client.phone,
         polygon
       ].join(dto.delimiter)
     })
 
+    if (!validDecryptionFound) return null
+
     return { result: lines.join('\n') }
   }
 
 
-  convertXMLToDelimitedText(dto: FileInputXMLDecryptRequestDTO): FileDecryptResponseDTO {
+  convertXMLToDelimitedText(dto: FileInputXMLDecryptRequestDTO): FileDecryptResponseDTO | null {
     const parser = new XMLParser({
       ignoreAttributes: false,
       parseAttributeValue: false
@@ -111,12 +123,21 @@ export class fileServiceImp implements fileServiceInt {
       ? parsed.clients.client
       : [parsed.clients.client]
 
+    let validDecryptionFound = false
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const lines = clients.map((client: any) => {
-      const decryptedCard = CryptoJS.AES.decrypt(
-        client.creditCardNumber,
-        dto.key
-      ).toString(CryptoJS.enc.Utf8)
+
+      let finalCard: string | null = null
+
+      try {
+        const decryptedBytes = CryptoJS.AES.decrypt(client.creditCardNumber, dto.key)
+        const decryptedCard = decryptedBytes.toString(CryptoJS.enc.Utf8)
+        finalCard = decryptedCard === '' ? null : decryptedCard
+        if (finalCard) validDecryptionFound = true
+      } catch {
+        finalCard = null
+      }
 
       const polygon = typeof client.polygon === 'string'
         ? client.polygon
@@ -126,12 +147,14 @@ export class fileServiceImp implements fileServiceInt {
         client.document,
         client.name,
         client.lastname,
-        decryptedCard,
+        finalCard,
         client.creditCardType,
         client.phone,
         polygon
       ].join(dto.delimiter)
     })
+
+    if (!validDecryptionFound) return null
 
     return { result: lines.join('\n') }
   }

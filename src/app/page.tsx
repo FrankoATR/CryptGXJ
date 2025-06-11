@@ -32,8 +32,8 @@ export default function HomePage() {
 
   return (
     <div className="bg-[#8AD1BF] flex flex-col items-center justify-center min-h-screen w-full">
-      <h1 className="font-bold text-6xl text-[#38544D]">CryptGXJ</h1>
-      <div className="flex flex-row justify-between mt-10 gap-4 w-full max-w-3xl">
+      <h1 className="font-bold text-4xl md:text-6xl text-[#38544D]">CryptGXJ</h1>
+      <div className="flex flex-col md:flex-row justify-between mt-10 gap-4 w-full max-w-3xl">
         {BUTTONS.map((btn, idx) => (
           <div
             key={btn.key}
@@ -46,11 +46,11 @@ export default function HomePage() {
             }`}
             onMouseEnter={() => setActive(btn.key)}
           >
-            <Button asChild className="h-30 w-30 bg-[#548075] text-center shadow-2xl">
+            <Button asChild className="w-full md:w-30 h-12 md:h-30 bg-[#548075] text-center shadow-2xl">
               <Link
                 href={btn.href}
                 className={`text-[#A1F4DF] font-mono ${
-                  active === btn.key ? "w-lg" : ""
+                  active === btn.key ? "md:w-lg" : ""
                 } font-extralight`}
               >
                 {btn.label}

@@ -21,6 +21,7 @@ export default function HomePage() {
   const [key, setKey] = useState("");
   const [format, setFormat] = useState<"json" | "xml">("json");
   const [result, setResult] = useState<string>("");
+  const [originalContent, setOriginalContent] = useState<string>("");
 
   const handleSubmit = async () => {
     if (!file || !key) {
@@ -66,12 +67,12 @@ export default function HomePage() {
 
   return (
     <>
-      <div className="grid grid-cols-2 gap-4 p-6 max-w-5xl h-screen mx-auto bg-white shadow-2xl rounded-lg font-mono">
-        <div className="border-r  pr-6 flex flex-col justify-center items-center">
-          <h1 className="text-2xl font-bold mb-4 text-center text-[#548075]"
-          >
-            <ArrowLeft className="inline mr-2 cursor-pointer" 
-            onClick={() => router.back()}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-6 max-w-5xl min-h-screen mx-auto bg-white shadow-2xl rounded-lg font-mono">
+        <div className="w-full md:border-r md:pr-6 flex flex-col justify-center items-center">
+          <h1 className="text-2xl font-bold mb-4 text-center text-[#548075]">
+            <ArrowLeft
+              className="inline mr-2 cursor-pointer"
+              onClick={() => router.back()}
             />
             Convertir Archivo a JSON o XML Cifrado
           </h1>
@@ -84,7 +85,21 @@ export default function HomePage() {
               id="file"
               type="file"
               accept=".txt"
-              onChange={(e) => setFile(e.target.files?.[0] || null)}
+              onChange={(e) => {
+                const selectedFile = e.target.files?.[0] || null;
+                setFile(selectedFile);
+                setResult("");
+                if (selectedFile) {
+                  const reader = new FileReader();
+                  reader.onload = (event) => {
+                    const text = event.target?.result as string;
+                    setOriginalContent(text);
+                  };
+                  reader.readAsText(selectedFile);
+                } else {
+                  setOriginalContent("");
+                }
+              }}
               className="cursor-pointer  file:bg-[#548075] file:text-white file:border-0 file:rounded file:px-4 file:py-2"
             />
           </div>
@@ -135,25 +150,31 @@ export default function HomePage() {
           </div>
 
           <Button
-            className=" mt-10 w-3/4 bg-[#6FAB9C] text-white px-4 py-2 rounded hover:bg-[#6FAB9C]/70 cursor-pointer font-mono"
+            className="mt-10 w-full md:w-3/4 bg-[#6FAB9C] text-white px-4 py-2 rounded hover:bg-[#6FAB9C]/70 cursor-pointer font-mono"
             onClick={handleSubmit}
           >
             CONVERTIR
           </Button>
         </div>
 
-        <div className="flex flex-col justify-center items-center">
+        <div className="flex flex-col justify-center items-center w-full">
+          {originalContent && (
+            <div className="mb-4 p-2 border rounded bg-gray-100 text-sm w-full max-h-40 overflow-y-auto whitespace-pre-wrap">
+              <strong>Contenido original:</strong>
+              <pre>{originalContent}</pre>
+            </div>
+          )}
           <Label className="block font-mono font-semibold mb-5 text-2xl">
             RESULTADO:
           </Label>
           <textarea
-            className="border rounded w-full h-3/5 p-2 font-mono resize-y"
+            className="border rounded w-full h-40 md:h-3/5 p-2 font-mono resize-y"
             readOnly
             value={result}
           />
           {result && (
             <Button
-              className="mt-6 font-mono w-3/4 bg-[#39574F] text-white px-4 py-2 rounded hover:bg-[#39574F]/70 cursor-pointer"
+              className="mt-6 font-mono w-full md:w-3/4 bg-[#39574F] text-white px-4 py-2 rounded hover:bg-[#39574F]/70 cursor-pointer"
               onClick={() => handleDownload()}
             >
               DESCARGAR ARCHIVO

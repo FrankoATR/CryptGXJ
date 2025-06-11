@@ -85,8 +85,8 @@ export default function SwitchConvertPage() {
   };
 
   return (
-    <div className="grid grid-cols-2 gap-4 p-6 max-w-5xl h-screen mx-auto bg-white shadow-2xl rounded-lg font-mono">
-      <div className="border-r pr-6 flex flex-col justify-center items-center">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-6 max-w-5xl min-h-screen mx-auto bg-white shadow-2xl rounded-lg font-mono">
+      <div className="w-full md:border-r md:pr-6 flex flex-col justify-center items-center">
         <h1
           className="text-2xl font-bold mb-4 text-center text-[#548075]"
           onClick={() => window.history.back()}
@@ -130,7 +130,7 @@ export default function SwitchConvertPage() {
         </div>
 
         <Button
-          className="mt-10 w-3/4 bg-[#6FAB9C] text-white px-4 py-2 rounded hover:bg-[#6FAB9C]/70 cursor-pointer font-mono disabled:opacity-50"
+          className="mt-10 w-full md:w-3/4 bg-[#6FAB9C] text-white px-4 py-2 rounded hover:bg-[#6FAB9C]/70 cursor-pointer font-mono disabled:opacity-50"
           onClick={handleSubmit}
           disabled={!file || !fromFormat}
         >
@@ -143,7 +143,7 @@ export default function SwitchConvertPage() {
           ORIGINAL:
         </Label>
         <textarea
-          className="border rounded w-full h-1/3 p-2 font-mono resize-y mb-4"
+          className="border rounded w-full h-40 md:h-1/3 p-2 font-mono resize-y mb-4"
           readOnly
           value={originalFile}
         />
@@ -151,13 +151,13 @@ export default function SwitchConvertPage() {
           RESULTADO:
         </Label>
         <textarea
-          className="border rounded w-full h-1/3 p-2 font-mono resize-y"
+          className="border rounded w-full h-40 md:h-1/3 p-2 font-mono resize-y"
           readOnly
           value={result}
         />
         {result && (
           <Button
-            className="mt-6 font-mono w-3/4 bg-[#39574F] text-white px-4 py-2 rounded hover:bg-[#39574F]/70 cursor-pointer"
+            className="mt-6 font-mono w-full md:w-3/4 bg-[#39574F] text-white px-4 py-2 rounded hover:bg-[#39574F]/70 cursor-pointer"
             onClick={handleDownload}
           >
             DESCARGAR ARCHIVO
